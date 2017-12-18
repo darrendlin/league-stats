@@ -11,7 +11,7 @@ def getRegionData(region):
   challengers = watcher.league.challenger_by_queue(region, sr_ranked_solo_str)
   for i, playerEntry in enumerate(challengers['entries']):
     print('\t({:d}/{:d}) player:'.format(i+1, len(challengers['entries'])), playerEntry['playerOrTeamName'])
-    accountId = watcher.summoner.by_name(region, playerEntry['playerOrTeamName'])['accountId']
+    accountId = watcher.summoner.by_id(region, playerEntry['playerOrTeamId'])['accountId']
     matches = watcher.match.matchlist_by_account(region, accountId, queue=sr_ranked_solo, end_index=20)
     goldEarnedList = [];
     for match in matches['matches']:
@@ -24,10 +24,9 @@ def getRegionData(region):
     #print(accountId, avgGoldEarned)
     df = df.append(pd.DataFrame([[accountId, avgGoldEarned]], columns=['accountId', 'avgGoldEarned']), ignore_index=True)
     #print(df)
-  df.to_csv(region + '.csv')
+  df.to_csv(region + '.csv', index=False)
 
 # args
-
 region = sys.argv[1]
 apiKey = open('api_key.txt', 'r').read() or sys.argv[2]
 

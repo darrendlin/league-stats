@@ -1,4 +1,6 @@
 import sys
+import json
+import os.path
 from pprint import PrettyPrinter
 from functools import reduce
 from riotwatcher import RiotWatcher
@@ -16,7 +18,15 @@ def getRegionData(region):
     goldEarnedList = [];
     for match in matches['matches']:
       #print('\t\tmatch:', match['gameId'])
-      matchData = watcher.match.by_id(region, match['gameId'])
+      matchData = None
+      matchFilePath = 'data/%s/%s.json' %(region, match['gameId'])
+      if os.path.isfile(matchFilePath):
+        matchData = json.loads(open(matchFilePath, 'r').read())
+      else:
+        matchData = watcher.match.by_id(region, match['gameId'])
+        f = open(matchFilePath, 'w+')
+        json.dump(matchData, f)
+        f.close()
       participantId = list(filter(lambda p: p['player']['currentAccountId'] == accountId, matchData['participantIdentities']))[0]['participantId']
       goldEarned = list(filter(lambda p: p['participantId'] == participantId, matchData['participants']))[0]['stats']['goldEarned']
       goldEarnedList.append(goldEarned);

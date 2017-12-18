@@ -4,6 +4,7 @@ from functools import reduce
 from riotwatcher import RiotWatcher
 import pandas as pd
 
+# def
 def getRegionData(region):
   df = pd.DataFrame(columns=['accountId', 'avgGoldEarned'])
   print(region);
@@ -24,10 +25,16 @@ def getRegionData(region):
     df = df.append(pd.DataFrame([[accountId, avgGoldEarned]], columns=['accountId', 'avgGoldEarned']), ignore_index=True)
     #print(df)
   df.to_csv(region + '.csv')
-  
+
 # args
-apiKey = sys.argv[1]
-region = sys.argv[2]
+
+region = sys.argv[1]
+apiKey = open('api_key.txt', 'r').read() || sys.argv[2]
+
+if apiKey is None:
+  print('Provide api_key.txt or as arg')
+  sys.exit(0)
+
 
 # initialize
 pp = PrettyPrinter(indent=2)

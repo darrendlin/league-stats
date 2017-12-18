@@ -29,7 +29,7 @@ def getRegionData(region):
 # args
 
 region = sys.argv[1]
-apiKey = open('api_key.txt', 'r').read() || sys.argv[2]
+apiKey = open('api_key.txt', 'r').read() or sys.argv[2]
 
 if apiKey is None:
   print('Provide api_key.txt or as arg')

@@ -1,19 +1,10 @@
+import sys
 from pprint import PrettyPrinter
 from functools import reduce
 from riotwatcher import RiotWatcher
 import pandas as pd
 
-# initialize
-pp = PrettyPrinter(indent=2)
-watcher = RiotWatcher('RGAPI-0e63de8c-1053-474a-a4e2-16d01b7bbc64')
-
-# variables
-regions = ['na1', 'br1', 'eun1', 'euw1', 'jp1', 'kr', 'la1', 'la2', 'oc1', 'tr1', 'ru']
-sr_ranked_solo_str = 'RANKED_SOLO_5x5'
-sr_ranked_solo = 420
-
-# run
-for region in regions:
+def getRegionData(region):
   df = pd.DataFrame(columns=['accountId', 'avgGoldEarned'])
   print(region);
   challengers = watcher.league.challenger_by_queue(region, sr_ranked_solo_str)
@@ -33,3 +24,25 @@ for region in regions:
     df = df.append(pd.DataFrame([[accountId, avgGoldEarned]], columns=['accountId', 'avgGoldEarned']), ignore_index=True)
     #print(df)
   df.to_csv(region + '.csv')
+  
+# args
+apiKey = sys.argv[1]
+region = sys.argv[2]
+
+# initialize
+pp = PrettyPrinter(indent=2)
+watcher = RiotWatcher(apiKey)
+
+# variables
+regions = ['na1', 'br1', 'eun1', 'euw1', 'jp1', 'kr', 'la1', 'la2', 'oc1', 'tr1', 'ru']
+sr_ranked_solo_str = 'RANKED_SOLO_5x5'
+sr_ranked_solo = 420
+
+# run
+if region is None:
+  for r in regions:
+    getRegionData(r)
+else:
+  getRegionData(region)
+
+
